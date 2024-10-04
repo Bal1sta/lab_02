@@ -1,130 +1,38 @@
-# при этом имя рабочего процесса устанавливается равным "C ++ CI
-name: 'C++ CI'
+name: CMake
 
-#on: определяет события, которые будут запускать рабочий процесс.
-#push: рабочий процесс будет запускаться всякий раз, когда происходит событие push для указанных ветвей.
-#branches: Рабочий процесс запускается при отправке в main ветку или feature/github_actions ответвление
-on:      
+on:
   push:
-    branches:
-      - main
-      - feature/github_actions
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-# разрешения: В этом разделе определяются разрешения для рабочего процесса.
-# содержимое: запись: Предоставляет доступ на запись к содержимому репозитория, позволяя рабочему процессу создавать выпуски и загружать ресурсы
-permissions:
-  contents: write  # Права на запись
-
-
-#задания: В этом разделе определяется набор заданий, которые будут выполняться как часть рабочего процесса.
-#сборка: это название задания, которое будет обрабатывать сборку и тестирование проекта
 jobs:
   build:
-#Стратегия: Это позволяет определить несколько конфигураций для задания.
-#Матрица: стратегия матрицы позволяет выполнять задания в различных средах.
-#os: Указывает, что задания должны выполняться как на ubuntu-latest , так и на macos-latest
+    runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-#выполняется-в: указывает среду, в которой будет выполняться задание. Используется значение из матрицы (ubuntu-latest или macos-latest
         os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-#шаги: В этом разделе перечислены все шаги, которые будут выполнены в этом задании.
-#использование: Это указывает на то, что на этом шаге используется действие из GitHub Marketplace.
-#actions/checkout@v3: Проверяет ваш репозиторий, чтобы к нему можно было получить доступ во время рабочего процесса.
-#с помощью: Дополнительные опции переданы действию.
-#submodules: true: Гарантирует, что все подмодули также будут проверены.
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-#Название: понятное для человека название этого шага.
-#если: Условное выполнение; этот шаг выполняется только в том случае, если операционная система раннера - Linux.
-#выполнить: команды, которые будут выполнены на этом шаге.
-#sudo apt-get update: Обновляет списки пакетов для обновлений и новых пакетов в Ubuntu.
-#sudo apt-get install -y libboost-test-dev: Устанавливает тестовые библиотеки Boost, необходимые для тестирования.
-      - name: Install dependencies on Linux
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libboost-test-dev
-#Аналогично предыдущему шагу, но для macOS.
-#brew update: Обновляет список доступных пакетов Homebrew package manager.
-#brew install boost: Устанавливает библиотеки Boost на macOS.
-      - name: Install dependencies on macOS
-        if: ${{ runner.os == 'macOS' }}
-        run: |
-          brew update
-          brew install boost
-#Настраивает проект с помощью CMake, который генерирует файлы сборки на основе конфигурации вашего проекта.
-#cmake .: Запускает CMake в текущем каталоге.
-#-DPATCH_VERSION=${{ github.run_number }}: Задаёт переменную CMake PATCH_VERSION с текущим номером запуска, предоставленным GitHub Actions.
-      - name: Configure with CMake
-        run: |
-          cmake . -DPATCH_VERSION=${{ github.run_number }}
-#Создает проект с помощью команды сборки CMake.
-      - name: Build the project
-        run: |
-          cmake --build .
-#Выполняет тесты, определенные в вашей конфигурации CMake, путем создания цели с именем test.
-      - name: Run tests
-        run: |
-          cmake --build . --target test
-#Создаёт распространяемый пакет вашего проекта с помощью функции упаковки CMake.
-      - name: Create package
-        run: |
-          cmake --build . --target package
-#Создает релиз GitHub для сборок Linux только при запуске в Linux.
-#id: Присваивает идентификатор этому шагу, на который можно ссылаться позже.
-#использует: Использует действие для создания релиза на GitHub.
-#env:
-#GITHUB_TOKEN: Использует токен, хранящийся в секретах GitHub, для аутентификации запросов API.
-#с:
-#tag_name: Задает название тега для этого выпуска на основе текущего номера выпуска.
-#release_name: Задает понятное для человека название для этого выпуска.
-#draft, prerelease: Оба параметра установлены в значение false, что указывает на публичный релиз.
-      - name: Create Release for Linux
-        if: ${{ runner.os == 'Linux' }}
-        id: create_release_linux
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: "linux-${{ github.run_number }}"
-          release_name: "Release Linux ${{ github.run_number }}"
-          draft: false
-          prerelease: false
-#Загружает созданный ресурс (пакет Debian) как часть ранее созданного выпуска Linux.
-#Использует выходные данные предыдущих шагов (create_release_linux) для получения URL-адреса загрузки и предоставляет подробную информацию об объекте.
-      - name: Upload Release Asset (Linux)
-        if: ${{ runner.os == 'Linux' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release_linux.outputs.upload_url }}
-          asset_path: ./helloworld-0.0.${{ github.run_number }}-Linux.deb
-          asset_name: helloworld-0.0.${{ github.run_number }}-Linux.deb
-          asset_content_type: application/vnd.debian.binary-package
-#Похож на Linux, но создает релиз специально для сборок macOS.
-      - name: Create Release for macOS
-        if: ${{ runner.os == 'macOS' }}
-        id: create_release_macos
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: "macos-${{ github.run_number }}"
-          release_name: "Release macOS ${{ github.run_number }}"
-          draft: false
-          prerelease: false
-#загружается встроенный ресурс (пакет DMG) как часть выпуска macOS, созданного ранее.
-      - name: Upload Release Asset (macOS)
-        if: ${{ runner.os == 'macOS' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release_macos.outputs.upload_url }}
-          asset_path: ./helloworld-0.0.${{ github.run_number }}-Darwin.dmg
-          asset_name: helloworld-0.0.${{ github.run_number }}-Darwin.dmg
-          asset_content_type: application/x-apple-diskimage
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up CMake
+      uses: jwlawson/actions-setup-cmake@v1
+
+    - name: Configure CMake
+      run: cmake -S . -B build
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Run the program
+      run: ./build/ip_filter
+
+    - name: Check formatting with clang-format (optional)
+      run: |
+        sudo apt-get install -y clang-format
+        clang-format --version
+        clang-format -i main.cpp ip_filter.cpp
+        git diff --exit-code

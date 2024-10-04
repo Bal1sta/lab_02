@@ -9,14 +9,13 @@
 					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.14"
+						"string" : "3.10"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0,
-						1
+						0
 					]
 				}
 			],
@@ -28,11 +27,10 @@
 					[
 						0
 					],
-					"name" : "IPFilterProject",
+					"name" : "ip_filter",
 					"targetIndexes" : 
 					[
-						0,
-						1
+						0
 					]
 				}
 			],
@@ -41,15 +39,8 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ip_filter::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ip_filter-Debug-f850a2c31d65c7bb8337.json",
+					"jsonFile" : "target-ip_filter-Debug-91be5e85e713c6d5e1a9.json",
 					"name" : "ip_filter",
-					"projectIndex" : 0
-				},
-				{
-					"directoryIndex" : 0,
-					"id" : "test_ip_filter::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-test_ip_filter-Debug-4a9ddba1def4f6b962cd.json",
-					"name" : "test_ip_filter",
 					"projectIndex" : 0
 				}
 			]

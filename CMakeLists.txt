@@ -1,19 +1,15 @@
-cmake_minimum_required(VERSION 3.14)
-project(IPFilterProject VERSION 1.0 LANGUAGES CXX)
+# Минимальная версия CMake
+cmake_minimum_required(VERSION 3.10)
 
-# Укажите стандарт C++
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Название проекта
+project(ip_filter)
 
-# Найдите библиотеку Boost
-find_package(Boost REQUIRED)
+# Включаем стандарт C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Добавляем исполняемый файл для основной программы
+# Добавляем исполняемый файл
 add_executable(ip_filter ip_filter.cpp)
 
-# Добавляем исполняемый файл для тестов
-add_executable(test_ip_filter test_ip_filter.cpp)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,console")
-# Линкуем Boost с исполняемым файлом тестов
-target_link_libraries(test_ip_filter Boost::boost)
-configure_file(ip_filter.tsv ${CMAKE_CURRENT_BINARY_DIR}/ip_filter.tsv COPYONLY)
+# Добавляем файлы для тестов, если нужны
+# add_executable(test_ip_filter test_main.cpp ip_filter.cpp)

@@ -1,4 +1,3 @@
 C:/lAbA/lab_02/build/CMakeFiles/ip_filter.dir
-C:/lAbA/lab_02/build/CMakeFiles/test_ip_filter.dir
 C:/lAbA/lab_02/build/CMakeFiles/edit_cache.dir
 C:/lAbA/lab_02/build/CMakeFiles/rebuild_cache.dir
