@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/lAbA/lab_02/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -g -std=gnu++14 -o CMakeFiles\\ip_filter.dir\\ip_filter.cpp.obj -c C:\\lAbA\\lab_02\\ip_filter.cpp",
+  "file": "C:\\lAbA\\lab_02\\ip_filter.cpp",
+  "output": "CMakeFiles\\ip_filter.dir\\ip_filter.cpp.obj"
+},
+{
+  "directory": "C:/lAbA/lab_02/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -g -std=gnu++14 -o CMakeFiles\\test_ip_filter.dir\\test_ip_filter.cpp.obj -c C:\\lAbA\\lab_02\\test_ip_filter.cpp",
+  "file": "C:\\lAbA\\lab_02\\test_ip_filter.cpp",
+  "output": "CMakeFiles\\test_ip_filter.dir\\test_ip_filter.cpp.obj"
+}
+]
