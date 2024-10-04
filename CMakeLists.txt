@@ -1,56 +1,26 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(IFilterProject VERSION 0.1.0)
+project(ip_filter)
 
-# Найти Boost
-find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+# Установка C++ стандарта
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Создание библиотеки и исполняемого файла
-add_library(ip_filter ip_filter.cpp)
+# Добавляем исполняемый файл
+add_executable(ip_filter ip_filter.cpp)
+
+# Устанавливаем путь для тестов
 add_executable(test_ip_filter test_ip_filter.cpp)
 
-# Установка стандартов C++
-set_target_properties(ip_filter test_ip_filter PROPERTIES
-    CXX_STANDARD 14
-    CXX_STANDARD_REQUIRED ON
-)
+# Подключаем библиотеку Boost для тестирования
+find_package(Boost 1.65 REQUIRED COMPONENTS unit_test_framework)
 
-# Установка директорий для заголовочных файлов
-target_include_directories(ip_filter PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(test_ip_filter PRIVATE ${Boost_INCLUDE_DIRS})
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    target_link_libraries(test_ip_filter ${Boost_LIBRARIES})
+endif()
 
-# Связывание библиотек
-target_link_libraries(test_ip_filter PRIVATE ${Boost_LIBRARIES} ip_filter)
-
-# Включение тестирования
 enable_testing()
-add_test(NAME test_ip_filter COMMAND test_ip_filter)
 
-# Копирование ресурсов (если необходимо)
-set(RESOURCE_FILES 
-    resources/ic.icns 
-    # resources/info.plist  # Закомментируйте эту строку, если файл не нужен
-)
-
-foreach(RESOURCE ${RESOURCE_FILES})
-    configure_file(${RESOURCE} ${CMAKE_BINARY_DIR}/${RESOURCE} COPYONLY)
-endforeach()
-
-# Включение CPack для создания пакетов
-include(CPack)
-
-# Настройки для CPack
-set(CPACK_PACKAGE_NAME "ip_filter")
-set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
-set(CPACK_PACKAGE_DESCRIPTION "A description of your package.")
-set(CPACK_PACKAGE_LICENSE "MIT")  # Замените на вашу лицензию
-set(CPACK_GENERATOR "DEB")  # Или "Bundle" для macOS
-
-# Установка файлов в пакет (если необходимо)
-install(TARGETS ip_filter DESTINATION bin)
-install(TARGETS test_ip_filter DESTINATION bin)  # Если хотите включить тесты в пакет
-
-# Установка ресурсов в пакет (если необходимо)
-install(FILES ${RESOURCE_FILES} DESTINATION resources)
-
-message("Configured PROJECT_VERSION: ${PROJECT_VERSION}")
+# Добавляем тест
+add_test(NAME IPFilterTests COMMAND test_ip_filter)

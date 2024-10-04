@@ -109,6 +109,30 @@ build test_ip_filter.exe: CXX_EXECUTABLE_LINKER__test_ip_filter_Debug CMakeFiles
 
 
 #############################################
+# Utility command for package
+
+build CMakeFiles/package.util: CUSTOM_COMMAND all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\lAbA\lab_02\build && C:\msys64\mingw64\bin\cpack.exe --config ./CPackConfig.cmake"
+  DESC = Run CPack packaging tool...
+  pool = console
+  restat = 1
+
+build package: phony CMakeFiles/package.util
+
+
+#############################################
+# Utility command for package_source
+
+build CMakeFiles/package_source.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\lAbA\lab_02\build && C:\msys64\mingw64\bin\cpack.exe --config ./CPackSourceConfig.cmake C:/lAbA/lab_02/build/CPackSourceConfig.cmake"
+  DESC = Run CPack packaging tool for source...
+  pool = console
+  restat = 1
+
+build package_source: phony CMakeFiles/package_source.util
+
+
+#############################################
 # Utility command for test
 
 build CMakeFiles/test.util: CUSTOM_COMMAND
