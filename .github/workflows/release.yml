@@ -66,7 +66,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: release/ip_filter  # Corrected path to match where you placed it.
-        asset_name: ip_filter-executable
+        asset_name: ip_filter-Linux
         asset_content_type: application/octet-stream
 
   build-and-release-macos:
@@ -124,5 +124,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release_macos.outputs.upload_url }}
         asset_path: release/ip_filter  # Corrected path to match where you placed it.
-        asset_name: ip_filter-executable-macos  # Different asset name for clarity 
+        asset_name: ip_filter-Darwin-macos  # Different asset name for clarity 
         asset_content_type: application/octet-stream 
