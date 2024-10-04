@@ -1,4 +1,4 @@
-name: CMake
+name: CMake Build and Test
 
 on:
   push:
@@ -7,38 +7,24 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+  build-and-test:
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Remove old build directory
-      run: |
-        if [ -d "build" ]; then
-          rm -r build
-        fi
-
-    - name: Set up CMake
-      uses: jwlawson/actions-setup-cmake@v1
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake libboost-test-dev
 
     - name: Configure CMake
       run: cmake -S . -B build
+      shell: bash
 
-    - name: Build
+    - name: Build the project
       run: cmake --build build
+      shell: bash
 
-    - name: Run the program
-      run: ./build/ip_filter
-
-    - name: Check formatting with clang-format (optional)
-      run: |
-        sudo apt-get install -y clang-format
-        clang-format --version
-        clang-format -i main.cpp ip_filter.cpp
-        git diff --exit-code
+    - name: Run tests
+      run: ctest --test-dir build
+      shell: bash

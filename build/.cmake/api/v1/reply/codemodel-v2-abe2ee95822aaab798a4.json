@@ -15,7 +15,8 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -30,7 +31,8 @@
 					"name" : "ip_filter",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -39,8 +41,15 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ip_filter::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ip_filter-Debug-91be5e85e713c6d5e1a9.json",
+					"jsonFile" : "target-ip_filter-Debug-9a33790204fd13a36bc7.json",
 					"name" : "ip_filter",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_ip_filter::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_ip_filter-Debug-6e1eadd24e1959c93686.json",
+					"name" : "test_ip_filter",
 					"projectIndex" : 0
 				}
 			]
