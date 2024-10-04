@@ -17,6 +17,10 @@ jobs:
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y cmake libboost-test-dev
 
+    - name: Clean CMake build cache
+      run: rm -rf build
+      shell: bash
+
     - name: Configure CMake
       run: cmake -S . -B build
       shell: bash
