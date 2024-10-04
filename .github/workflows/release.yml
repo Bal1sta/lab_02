@@ -1,13 +1,14 @@
-name: CMake Build and Test
+name: CMake Build, Test and Release
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  build-and-test:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,9 +27,42 @@ jobs:
       shell: bash
 
     - name: Build the project
-      run: cmake --build build
+      run: cmake --build build --config Release
       shell: bash
 
     - name: Run tests
       run: ctest --test-dir build
       shell: bash
+
+    - name: Package binaries
+      run: |
+        mkdir -p release
+        cp build/your_executable release/
+      shell: bash
+
+    - name: Upload Release Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: your_project_name-binaries
+        path: release/
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        release_name: Release v1.0.${{ github.run_number }}
+        draft: false
+        prerelease: false
+
+    - name: Upload binaries to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: release/your_executable
+        asset_name: your_project_name-executable
+        asset_content_type: application/octet-stream
