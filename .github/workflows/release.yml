@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-release:
+  build-and-release-linux:
     runs-on: ubuntu-latest
 
     steps:
@@ -68,3 +68,61 @@ jobs:
         asset_path: release/ip_filter  # Corrected path to match where you placed it.
         asset_name: ip_filter-executable
         asset_content_type: application/octet-stream
+
+  build-and-release-macos:
+    runs-on: macos-14  # Use macOS 14 runner
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: brew install cmake boost  # Install dependencies using Homebrew
+    
+    - name: Clean CMake build cache
+      run: rm -rf build
+      shell: bash
+
+    - name: Configure CMake
+      run: cmake -S . -B build
+      shell: bash
+
+    - name: Build the project
+      run: cmake --build build --config Release
+      shell: bash
+
+    - name: List build directory
+      run: ls -la build/
+
+    - name: Package binaries
+      run: |
+        mkdir -p release
+        cp build/ip_filter release/
+      shell: bash
+
+    - name: Upload Release Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ip_filter-binaries-macos
+        path: release/
+
+    - name: Create GitHub Release for macOS
+      id: create_release_macos
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.${{ github.run_number }}-macos  # Different tag for macOS release
+        release_name: Release v1.0.${{ github.run_number }}-macos 
+        draft: false
+        prerelease: false
+
+    - name: Upload binaries to Release for macOS
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release_macos.outputs.upload_url }}
+        asset_path: release/ip_filter  # Corrected path to match where you placed it.
+        asset_name: ip_filter-executable-macos  # Different asset name for clarity 
+        asset_content_type: application/octet-stream 
