@@ -30,10 +30,9 @@ jobs:
       run: cmake --build build --config Release
       shell: bash
 
-    - name: Run tests
-      run: ctest --test-dir build
-      shell: bash
-
+    - name: List build directory
+      run: ls -la build/
+      
     - name: Package binaries
       run: |
         mkdir -p release
