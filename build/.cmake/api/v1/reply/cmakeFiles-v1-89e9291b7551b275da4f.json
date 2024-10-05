@@ -780,6 +780,27 @@
 		{
 			"isExternal" : true,
 			"path" : "C:/msys64/mingw64/lib/cmake/boost_unit_test_framework-1.86.0-shared/boost_unit_test_framework-targets-release.cmake"
+		},
+		{
+			"path" : "resources/ic.icns"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/msys64/mingw64/share/cmake/Modules/CPack.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/msys64/mingw64/share/cmake/Modules/CPackComponent.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/msys64/mingw64/share/cmake/Templates/CPackConfig.cmake.in"
+		},
+		{
+			"isExternal" : true,
+			"path" : "C:/msys64/mingw64/share/cmake/Templates/CPackConfig.cmake.in"
 		}
 	],
 	"kind" : "cmakeFiles",

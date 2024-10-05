@@ -6,7 +6,8 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-360d82085b212b7c67c1.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.10"
@@ -28,7 +29,7 @@
 					[
 						0
 					],
-					"name" : "ip_filter",
+					"name" : "IFilterProject",
 					"targetIndexes" : 
 					[
 						0,
@@ -41,14 +42,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ip_filter::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ip_filter-Debug-9a33790204fd13a36bc7.json",
+					"jsonFile" : "target-ip_filter-Debug-9f465968a29547eda49f.json",
 					"name" : "ip_filter",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "test_ip_filter::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-test_ip_filter-Debug-6e1eadd24e1959c93686.json",
+					"jsonFile" : "target-test_ip_filter-Debug-a618509a726539878e7d.json",
 					"name" : "test_ip_filter",
 					"projectIndex" : 0
 				}

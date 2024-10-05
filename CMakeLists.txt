@@ -33,7 +33,7 @@ set(RESOURCE_FILES
 )
 
 foreach(RESOURCE ${RESOURCE_FILES})
-    configure_file(${RESOURCE} ${CMAKE_BINARY_DIR}/${RESOURCE} COPYONLY)
+configure_file(${RESOURCE} ${CMAKE_BINARY_DIR}/${RESOURCE} COPYONLY)
 endforeach()
 
 # Включение CPack для создания пакетов
