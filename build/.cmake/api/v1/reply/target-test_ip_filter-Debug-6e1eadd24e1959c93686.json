@@ -14,7 +14,6 @@
 		"commands" : 
 		[
 			"add_executable",
-			"install",
 			"target_link_libraries"
 		],
 		"files" : 
@@ -29,19 +28,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 10,
+				"line" : 13,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 51,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 23,
+				"line" : 20,
 				"parent" : 0
 			}
 		]
@@ -52,25 +45,18 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu++14"
+					"fragment" : "-g -std=gnu++17"
 				}
 			],
 			"defines" : 
 			[
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_TEST_DYN_LINK"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 2,
 					"define" : "BOOST_TEST_NO_LIB"
-				}
-			],
-			"includes" : 
-			[
-				{
-					"backtrace" : 3,
-					"path" : "C:/lAbA/lab_02"
 				}
 			],
 			"language" : "CXX",
@@ -78,12 +64,12 @@
 			{
 				"backtraces" : 
 				[
-					3,
-					3,
-					3,
-					3
+					2,
+					2,
+					2,
+					2
 				],
-				"standard" : "14"
+				"standard" : "17"
 			},
 			"sourceIndexes" : 
 			[
@@ -91,28 +77,7 @@
 			]
 		}
 	],
-	"dependencies" : 
-	[
-		{
-			"backtrace" : 3,
-			"id" : "ip_filter::@6890427a1f51a3e7e1df"
-		}
-	],
 	"id" : "test_ip_filter::@6890427a1f51a3e7e1df",
-	"install" : 
-	{
-		"destinations" : 
-		[
-			{
-				"backtrace" : 2,
-				"path" : "bin"
-			}
-		],
-		"prefix" : 
-		{
-			"path" : "C:/Program Files (x86)/IPFilterProject"
-		}
-	},
 	"link" : 
 	{
 		"commandFragments" : 
@@ -126,13 +91,8 @@
 				"role" : "flags"
 			},
 			{
-				"backtrace" : 3,
+				"backtrace" : 2,
 				"fragment" : "C:\\msys64\\mingw64\\lib\\libboost_unit_test_framework-mt.dll.a",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 3,
-				"fragment" : "libip_filter.a",
 				"role" : "libraries"
 			},
 			{

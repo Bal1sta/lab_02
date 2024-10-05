@@ -1,9 +1,11 @@
 {
-	"archive" : {},
 	"artifacts" : 
 	[
 		{
-			"path" : "libip_filter.a"
+			"path" : "ip_filter.exe"
+		},
+		{
+			"path" : "ip_filter.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -11,10 +13,7 @@
 	{
 		"commands" : 
 		[
-			"add_library",
-			"install",
-			"target_include_directories",
-			"set_target_properties"
+			"add_executable"
 		],
 		"files" : 
 		[
@@ -28,25 +27,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 9,
-				"parent" : 0
-			},
-			{
-				"command" : 1,
-				"file" : 0,
-				"line" : 50,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 19,
-				"parent" : 0
-			},
-			{
-				"command" : 3,
-				"file" : 0,
-				"line" : 13,
+				"line" : 10,
 				"parent" : 0
 			}
 		]
@@ -57,14 +38,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu++14"
-				}
-			],
-			"includes" : 
-			[
-				{
-					"backtrace" : 3,
-					"path" : "C:/lAbA/lab_02"
+					"fragment" : "-g -std=gnu++17"
 				}
 			],
 			"language" : "CXX",
@@ -72,9 +46,9 @@
 			{
 				"backtraces" : 
 				[
-					4
+					1
 				],
-				"standard" : "14"
+				"standard" : "17"
 			},
 			"sourceIndexes" : 
 			[
@@ -83,22 +57,27 @@
 		}
 	],
 	"id" : "ip_filter::@6890427a1f51a3e7e1df",
-	"install" : 
+	"link" : 
 	{
-		"destinations" : 
+		"commandFragments" : 
 		[
 			{
-				"backtrace" : 2,
-				"path" : "bin"
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"role" : "libraries"
 			}
 		],
-		"prefix" : 
-		{
-			"path" : "C:/Program Files (x86)/IPFilterProject"
-		}
+		"language" : "CXX"
 	},
 	"name" : "ip_filter",
-	"nameOnDisk" : "libip_filter.a",
+	"nameOnDisk" : "ip_filter.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -123,5 +102,5 @@
 			"sourceGroupIndex" : 0
 		}
 	],
-	"type" : "STATIC_LIBRARY"
+	"type" : "EXECUTABLE"
 }

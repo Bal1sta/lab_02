@@ -1,56 +1,26 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10)  # Устанавливаем минимальную версию CMake, необходимую для сборки проекта
 
-project(IFilterProject VERSION 0.1.0)
+project(ip_filter)  # Название проекта
 
-# Найти Boost
-find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+# Установка C++ стандарта
+set(CMAKE_CXX_STANDARD 17)  # Устанавливаем стандарт языка C++ на 17
+set(CMAKE_CXX_STANDARD_REQUIRED True)  # Обязательное использование указанного стандарта
 
-# Создание библиотеки и исполняемого файла
-add_library(ip_filter ip_filter.cpp)
-add_executable(test_ip_filter test_ip_filter.cpp)
+# Добавляем исполняемый файл
+add_executable(ip_filter ip_filter.cpp)  # Создаем исполняемый файл 'ip_filter' из исходного файла 'ip_filter.cpp'
 
-# Установка стандартов C++
-set_target_properties(ip_filter test_ip_filter PROPERTIES
-    CXX_STANDARD 14
-    CXX_STANDARD_REQUIRED ON
-)
+# Устанавливаем путь для тестов
+add_executable(test_ip_filter test_ip_filter.cpp)  # Создаем исполняемый файл 'test_ip_filter' из исходного файла 'test_ip_filter.cpp'
 
-# Установка директорий для заголовочных файлов
-target_include_directories(ip_filter PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(test_ip_filter PRIVATE ${Boost_INCLUDE_DIRS})
+# Подключаем библиотеку Boost для тестирования
+find_package(Boost 1.65 REQUIRED COMPONENTS unit_test_framework)  # Находим библиотеку Boost версии 1.65 и требуем компонент 'unit_test_framework'
 
-# Связывание библиотек
-target_link_libraries(test_ip_filter PRIVATE ${Boost_LIBRARIES} ip_filter)
+if(Boost_FOUND)  # Проверяем, найдена ли библиотека Boost
+    include_directories(${Boost_INCLUDE_DIRS})  # Добавляем директории с заголовочными файлами Boost в проект
+    target_link_libraries(test_ip_filter ${Boost_LIBRARIES})  # Линкуем библиотеку Boost с исполняемым файлом тестов
+endif()  # Конец проверки наличия библиотеки Boost
 
-# Включение тестирования
-enable_testing()
-add_test(NAME test_ip_filter COMMAND test_ip_filter)
+enable_testing()  # Включаем поддержку тестирования в CMake
 
-# Копирование ресурсов (если необходимо)
-set(RESOURCE_FILES 
-    resources/ic.icns 
-    
-)
-
-foreach(RESOURCE ${RESOURCE_FILES})
-configure_file(${RESOURCE} ${CMAKE_BINARY_DIR}/${RESOURCE} COPYONLY)
-endforeach()
-
-# Включение CPack для создания пакетов
-include(CPack)
-
-# Настройки для CPack
-set(CPACK_PACKAGE_NAME "ip_filter")
-set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
-set(CPACK_PACKAGE_DESCRIPTION "A description of your package.")
-set(CPACK_PACKAGE_LICENSE "MIT")
-set(CPACK_GENERATOR "DEB")
-
-# Установка файлов в пакет (если необходимо)
-install(TARGETS ip_filter DESTINATION bin)
-install(TARGETS test_ip_filter DESTINATION bin)  
-
-# Установка ресурсов в пакет (если необходимо)
-install(FILES ${RESOURCE_FILES} DESTINATION resources)
-
-message("Configured PROJECT_VERSION: ${PROJECT_VERSION}")
+# Добавляем тест
+add_test(NAME IPFilterTests COMMAND test_ip_filter)  # Добавляем тест с именем 'IPFilterTests', который запускает исполняемый файл 'test_ip_filter'

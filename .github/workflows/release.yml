@@ -1,109 +1,131 @@
-name: C++ CI
+name: CMake Build, Test and Release  # Название рабочего процесса
 
 on:
   push:
-    branches:
-      - main
-      - feature/github_actions
+    branches: [ main ]  # Срабатывает при пуше в основную ветку
+  pull_request:
+    branches: [ main ]  # Срабатывает при создании pull request в основную ветку
+  workflow_dispatch:  # Позволяет вручную запускать рабочий процесс
 
 permissions:
-  contents: write
+  contents: write  # Предоставляет разрешение на запись содержимого
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60  # Увеличьте время выполнения, если это необходимо
+  build-and-release-linux:  # Задача для сборки и релиза на Linux
+    runs-on: ubuntu-latest  # Использует последнюю версию Ubuntu
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: true
+    - name: Checkout repository  # Шаг для получения кода
+      uses: actions/checkout@v3  # Использует действие checkout версии 3
 
-      - name: Debug - Start
-        run: echo "Starting the job"
+    - name: Install dependencies  # Шаг для установки необходимых пакетов
+      run: sudo apt-get update && sudo apt-get install -y cmake libboost-test-dev  # Обновляет список пакетов и устанавливает cmake и Boost Test
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libboost-all-dev \
-            cmake \
-            openmpi-bin \
-            libopenmpi-dev
+    - name: Clean CMake build cache  # Шаг для очистки предыдущих сборок
+      run: rm -rf build  # Удаляет директорию сборки, если она существует
+      shell: bash  # Использует оболочку bash для этой команды
 
-      # Отладка перед сборкой
-      - name: Debug - Post install
-        run: echo "Dependencies installed"
+    - name: Configure CMake  # Шаг для конфигурации проекта CMake
+      run: cmake -S . -B build  # Генерирует файлы сборки в директории 'build'
+      shell: bash  # Использует оболочку bash для этой команды
 
-      - name: Create build directory
-        run: mkdir -p build
+    - name: Build the project  # Шаг для компиляции проекта
+      run: cmake --build build --config Release  # Сборка в конфигурации Release
+      shell: bash  # Использует оболочку bash для этой команды
 
-      - name: Configure with CMake
-        run: |
-          cd build
-          cmake .. -DPATCH_VERSION=${{ github.run_number }}
-          
-      - name: Build the project
-        run: |
-          cd build
-          cmake --build .
-
-      - name: Run tests
-        run: |
-          cd build
-          cmake --build . --target test
-
-      - name: Create package
-        run: |
-          cd build
-          cmake --build . --target package
-
-      # Отладка перед проверкой существования пакета
-      - name: Debug - List contents of build directory after package creation
-        run: ls -l ./build
-
-      # Проверка существования пакета для Linux
-      - name: Check if Linux package exists
-        run: |
-          if [ -f "./build/IFilterProject-0.1.0-Linux.sh" ]; then  # Убедитесь, что имя файла правильное
-            echo "Linux package exists."
-          else
-            echo "Linux package does not exist."
-            exit 1
-          fi
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: "release-${{ github.run_number }}"
-          release_name: "Release ${{ github.run_number }}"
-          draft: false
-          prerelease: false
-
-      # Отладка перед загрузкой ассета
-      - name: Debug - List contents of build directory before upload
-        run: ls -l ./build
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/IFilterProject-0.1.0-Linux.sh  # Убедитесь, что путь правильный для созданного пакета 
-          asset_name: IFilterProject-0.1.0-Linux.sh 
-          asset_content_type: application/x-sh
-
-      - name: Debug - End
-        run: echo "Ending the job"
+    - name: List build directory  # Шаг для отображения содержимого директории сборки
+      run: ls -la build/  # Показывает детализированный список файлов в 'build'
       
-      - name: Debug - List all files in build directory at the end of the job
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "List of files in build directory:"
-          ls -la ./build
+    - name: Package binaries into ZIP for Linux  # Шаг для подготовки бинарников к релизу в ZIP формате
+      run: |
+        mkdir -p release  # Создает директорию 'release', если она не существует
+        cp build/ip_filter release/  # Копирует собранный бинарник в директорию 'release'
+        cd release && zip ip_filter-linux.zip ip_filter   # Создает ZIP файл с бинарником
+      shell: bash
+
+    - name: Upload Release Artifact for Linux  # Шаг для загрузки артефактов сборки
+      uses: actions/upload-artifact@v3  
+      with:
+        name: ip_filter-binaries-linux  
+        path: release/  
+
+    - name: Create GitHub Release for Linux  # Шаг для создания релиза на GitHub
+      id: create_release  
+      uses: actions/create-release@v1  
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+      with:
+        tag_name: v1.0.${{ github.run_number }}  
+        release_name: Release v1.0.${{ github.run_number }}  
+        draft: false  
+        prerelease: false  
+
+    - name: Upload binaries to Release for Linux  # Шаг для загрузки собранных бинарников в релиз
+      uses: actions/upload-release-asset@v1  
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: release/ip_filter-linux.zip   # Путь к загружаемому ZIP активу 
+        asset_name: ip_filter-linux.zip   # Имя актива 
+        asset_content_type: application/zip   # Тип контента актива 
+
+    
+  build-and-release-macos:   # Задача для сборки и релиза на macOS
+    runs-on: macos-14  
+
+    steps:
+    - name: Checkout repository  
+      uses: actions/checkout@v3   
+
+    - name: Install dependencies   
+      run: brew install cmake boost  
+    
+    - name: Clean CMake build cache   
+      run: rm -rf build   
+      shell: bash   
+
+    - name: Configure CMake   
+      run: cmake -S . -B build   
+      shell: bash   
+
+    - name: Build the project   
+      run: cmake --build build --config Release   
+      shell: bash   
+
+    - name: List build directory   
+      run: ls -la build/   
+      
+    - name: Package binaries into ZIP for macOS   # Шаг для подготовки бинарников к релизу в ZIP формате на macOS 
+      run: |
+        mkdir -p release   # Создает директорию 'release', если она не существует 
+        cp build/ip_filter release/   # Копирует собранный бинарник в директорию 'release' 
+        cd release && zip ip_filter-macos.zip ip_filter   # Создает ZIP файл с бинарником 
+      shell: bash  
+
+    - name: Upload Release Artifact for macOS   # Шаг для загрузки артефактов сборки на macOS 
+      uses: actions/upload-artifact@v3   
+      with:
+        name: ip_filter-binaries-macos   
+        path: release/   
+
+    - name: Create GitHub Release for macOS  
+      id: create_release_macos   
+      uses: actions/create-release@v1   
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+      with:
+        tag_name: v1.0.${{ github.run_number }}-macos   
+        release_name: Release v1.0.${{ github.run_number }}-macos   
+        draft: false   
+        prerelease: false   
+
+    - name: Upload binaries to Release for macOS  
+      uses: actions/upload-release-asset@v1   
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+      with:
+        upload_url: ${{ steps.create_release_macos.outputs.upload_url }}   
+        asset_path: release/ip_filter-macos.zip   # Путь к загружаемому ZIP активу 
+        asset_name: ip_filter-macos.zip   # Имя актива 
+        asset_content_type: application/zip   # Тип контента актива 
