@@ -1,128 +1,129 @@
-name: CMake Build, Test and Release
+name: CMake Build, Test and Release  # Название рабочего процесса
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  # Срабатывает при пуше в основную ветку
   pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ main ]  # Срабатывает при создании pull request в основную ветку
+  workflow_dispatch:  # Позволяет вручную запускать рабочий процесс
 
 permissions:
-  contents: write
+  contents: write  # Предоставляет разрешение на запись содержимого
 
 jobs:
-  build-and-release-linux:
-    runs-on: ubuntu-latest
+  build-and-release-linux:  # Задача для сборки и релиза на Linux
+    runs-on: ubuntu-latest  # Использует последнюю версию Ubuntu
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    - name: Checkout repository  # Шаг для получения кода
+      uses: actions/checkout@v3  # Использует действие checkout версии 3
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y cmake libboost-test-dev
+    - name: Install dependencies  # Шаг для установки необходимых пакетов
+      run: sudo apt-get update && sudo apt-get install -y cmake libboost-test-dev  # Обновляет список пакетов и устанавливает cmake и Boost Test
 
-    - name: Clean CMake build cache
-      run: rm -rf build
-      shell: bash
+    - name: Clean CMake build cache  # Шаг для очистки предыдущих сборок
+      run: rm -rf build  # Удаляет директорию сборки, если она существует
+      shell: bash  # Использует оболочку bash для этой команды
 
-    - name: Configure CMake
-      run: cmake -S . -B build
-      shell: bash
+    - name: Configure CMake  # Шаг для конфигурации проекта CMake
+      run: cmake -S . -B build  # Генерирует файлы сборки в директории 'build'
+      shell: bash  # Использует оболочку bash для этой команды
 
-    - name: Build the project
-      run: cmake --build build --config Release
-      shell: bash
+    - name: Build the project  # Шаг для компиляции проекта
+      run: cmake --build build --config Release  # Сборка в конфигурации Release
+      shell: bash  # Использует оболочку bash для этой команды
 
-    - name: List build directory
-      run: ls -la build/
-
-    - name: Package binaries
+    - name: List build directory  # Шаг для отображения содержимого директории сборки
+      run: ls -la build/  # Показывает детализированный список файлов в 'build'
+      
+    - name: Package binaries  # Шаг для подготовки бинарников к релизу
       run: |
-        mkdir -p release
-        cp build/ip_filter release/
-      shell: bash
+        mkdir -p release  # Создает директорию 'release', если она не существует
+        cp build/ip_filter release/  # Копирует собранный бинарник в директорию 'release'
+      shell: bash  # Использует оболочку bash для этой команды
 
-    - name: Upload Release Artifact
-      uses: actions/upload-artifact@v3
+    - name: Upload Release Artifact  # Шаг для загрузки артефактов сборки
+      uses: actions/upload-artifact@v3  # Использует действие загрузки артефактов версии 3
       with:
-        name: ip_filter-binaries
-        path: release/
+        name: ip_filter-binaries  # Имя артефакта
+        path: release/  # Путь к загружаемым файлам
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
+    - name: Create GitHub Release  # Шаг для создания релиза на GitHub
+      id: create_release  # Устанавливает ID для этого шага для дальнейшего использования
+      uses: actions/create-release@v1  # Использует действие создания релиза версии 1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Использует токен GitHub из секретов для аутентификации
       with:
-        tag_name: v1.0.${{ github.run_number }}
-        release_name: Release v1.0.${{ github.run_number }}
-        draft: false
-        prerelease: false
+        tag_name: v1.0.${{ github.run_number }}  # Формат тега с использованием номера запуска для уникальности
+        release_name: Release v1.0.${{ github.run_number }}  # Имя релиза
+        draft: false  # Устанавливает статус черновика в false (публикует немедленно)
+        prerelease: false  # Устанавливает статус предпросмотра в false (не является предпросмотром)
 
-    - name: Upload binaries to Release
-      uses: actions/upload-release-asset@v1
+    - name: Upload binaries to Release  # Шаг для загрузки собранных бинарников в релиз
+      uses: actions/upload-release-asset@v1  # Использует действие загрузки активов релиза версии 1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Использует токен GitHub из секретов для аутентификации
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: release/ip_filter  # Corrected path to match where you placed it.
-        asset_name: ip_filter-Linux
-        asset_content_type: application/octet-stream
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  # URL, полученный из шага create_release, для загрузки активов
+        asset_path: release/ip_filter   # Путь к загружаемому бинарному активу  
+        asset_name: ip_filter-Linux   # Имя актива, как он будет отображаться на GitHub 
+        asset_content_type: application/octet-stream   # Тип контента актива
 
-  build-and-release-macos:
-    runs-on: macos-14  # Use macOS 14 runner
+  
+  build-and-release-macos:   # Задача для сборки и релиза на macOS
+    runs-on: macos-14   # Использует версию macOS runner 14  
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    - name: Checkout repository   # Шаг для получения кода на macOS
+      uses: actions/checkout@v3   # Использует действие checkout версии 3
 
-    - name: Install dependencies
-      run: brew install cmake boost  # Install dependencies using Homebrew
+    - name: Install dependencies   # Шаг для установки необходимых пакетов на macOS
+      run: brew install cmake boost   # Устанавливает cmake и Boost с помощью Homebrew
     
-    - name: Clean CMake build cache
-      run: rm -rf build
-      shell: bash
+    - name: Clean CMake build cache   # Шаг для очистки предыдущих сборок на macOS
+      run: rm -rf build   # Удаляет директорию сборки, если она существует
+      shell: bash   # Использует оболочку bash для этой команды
 
-    - name: Configure CMake
-      run: cmake -S . -B build
-      shell: bash
+    - name: Configure CMake   # Шаг для конфигурации проекта CMake на macOS
+      run: cmake -S . -B build   # Генерирует файлы сборки в директории 'build'
+      shell: bash   # Использует оболочку bash для этой команды
 
-    - name: Build the project
-      run: cmake --build build --config Release
-      shell: bash
+    - name: Build the project   # Шаг для компиляции проекта на macOS
+      run: cmake --build build --config Release   # Сборка в конфигурации Release
+      shell: bash   # Использует оболочку bash для этой команды
 
-    - name: List build directory
-      run: ls -la build/
-
-    - name: Package binaries
+    - name: List build directory   # Шаг для отображения содержимого директории сборки на macOS
+      run: ls -la build/   # Показывает детализированный список файлов в 'build'
+      
+    - name: Package binaries   # Шаг для подготовки бинарников к релизу на macOS
       run: |
-        mkdir -p release
-        cp build/ip_filter release/
-      shell: bash
+        mkdir -p release   # Создает директорию 'release', если она не существует
+        cp build/ip_filter release/   # Копирует собранный бинарник в директорию 'release' 
+      shell: bash   # Использует оболочку bash для этой команды
 
-    - name: Upload Release Artifact
-      uses: actions/upload-artifact@v3
+    - name: Upload Release Artifact   # Шаг для загрузки артефактов сборки на macOS 
+      uses: actions/upload-artifact@v3   # Использует действие загрузки артефактов версии 3 
       with:
-        name: ip_filter-binaries-macos
-        path: release/
+        name: ip_filter-binaries-macos   # Имя артефакта 
+        path: release/   # Путь к загружаемым файлам 
 
-    - name: Create GitHub Release for macOS
-      id: create_release_macos
-      uses: actions/create-release@v1
+    - name: Create GitHub Release for macOS   # Шаг для создания релиза на GitHub специально для macOS 
+      id: create_release_macos   # Устанавливает ID для этого шага для дальнейшего использования 
+      uses: actions/create-release@v1   # Использует действие создания релиза версии 1 
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # Использует токен GitHub из секретов для аутентификации 
       with:
-        tag_name: v1.0.${{ github.run_number }}-macos  # Different tag for macOS release
-        release_name: Release v1.0.${{ github.run_number }}-macos 
-        draft: false
-        prerelease: false
+        tag_name: v1.0.${{ github.run_number }}-macos   # Формат тега с использованием номера запуска и указанием macOS 
+        release_name: Release v1.0.${{ github.run_number }}-macos   # Имя релиза 
+        draft: false   # Устанавливает статус черновика в false (публикует немедленно) 
+        prerelease: false   # Устанавливает статус предпросмотра в false (не является предпросмотром)
 
-    - name: Upload binaries to Release for macOS
-      uses: actions/upload-release-asset@v1
+    - name: Upload binaries to Release for macOS   # Шаг для загрузки собранных бинарников специально для macOS 
+      uses: actions/upload-release-asset@v1   # Использует действие загрузки активов релиза версии 1 
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # Использует токен GitHub из секретов для аутентификации 
       with:
-        upload_url: ${{ steps.create_release_macos.outputs.upload_url }}
-        asset_path: release/ip_filter  # Corrected path to match where you placed it.
-        asset_name: ip_filter-Darwin-macos  # Different asset name for clarity 
-        asset_content_type: application/octet-stream 
+        upload_url: ${{ steps.create_release_macos.outputs.upload_url }}   # URL, полученный из шага create_release_macos, для загрузки активов 
+        asset_path: release/ip_filter   # Путь к загружаемому бинарному активу  
+        asset_name: ip_filter-Darwin-macos   # Имя актива, как он будет отображаться на GitHub  
+        asset_content_type: application/octet-stream   # Тип контента актива 
