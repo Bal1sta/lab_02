@@ -903,7 +903,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "ip_filter"
+			"value" : "IFilterProject"
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION",
@@ -1511,7 +1511,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "[C:/msys64/mingw64/lib/cmake/Boost-1.86.0/BoostConfig.cmake][cfound components: unit_test_framework ][v1.86.0(1.65)]"
+			"value" : "[C:/msys64/mingw64/lib/cmake/Boost-1.86.0/BoostConfig.cmake][cfound components: unit_test_framework ][v1.86.0()]"
 		},
 		{
 			"name" : "IFilterProject_BINARY_DIR",
