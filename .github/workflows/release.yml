@@ -27,7 +27,6 @@ jobs:
         run: |
           brew update
           brew install boost cmake open-mpi
-
       - name: Debug - Post install for macOS
         run: echo "Dependencies installed for macOS"
 
@@ -38,35 +37,29 @@ jobs:
         run: |
           cd build
           cmake .. -DPATCH_VERSION=${{ github.run_number }}
-
       - name: Build the project for macOS
         run: |
           cd build
           cmake --build .
-
       - name: Run tests for macOS
         run: |
           cd build
           cmake --build . --target test
-
       - name: Create package for macOS
         run: |
           cd build
           cmake --build . --target package
-
       - name: Debug - List contents of build directory after package creation for macOS
         run: ls -l ./build
 
       - name: Check if macOS package exists
         run: |
-
           if [ -f "./build/IFilterProject-0.1.0-Darwin.sh" ] || [ -f "./build/IFilterProject-0.1.0-Darwin.tar.gz" ]; then
             echo "macOS package exists."
           else
             echo "macOS package does not exist."
             exit 1
           fi
-
       - name: Create Release for macOS
         id: create_release_macos
         uses: actions/create-release@v1
