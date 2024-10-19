@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 60  # Для решения ошибки с Check if
 
     steps:
-      - name: Checkout repository #Получение кода из репозитория
+      - name: Checkout repository # Получение кода из репозитория
         uses: actions/checkout@v3
         with:
           submodules: true
@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libboost-all-dev \ #Библиотека BOOST
+            libboost-all-dev \  # Библиотека BOOST
             cmake \
             openmpi-bin \
             libopenmpi-dev
@@ -36,13 +36,16 @@ jobs:
       - name: Debug - Post install
         run: echo "Dependencies installed"
 
+      - name: Clean build directory # Очистка директории сборки
+        run: rm -rf build || true
+
       - name: Create build directory # Директория сборки
         run: mkdir -p build
 
       - name: Configure with CMake
         run: |
           cd build
-          cmake .. -DPATCH_VERSION=${{ github.run_number }}
+          cmake .. -DPATCH_VERSION=${{ github.run_number }} -DCMAKE_VERBOSE_MAKEFILE=ON
           
       - name: Build the project
         run: |
@@ -64,7 +67,7 @@ jobs:
         run: ls -l ./build
 
       # Проверка существования пакета для Linux
-      - name: Check if Linux package exists //  Шаг для проверки существования созданного пакета 
+      - name: Check if Linux package exists # Шаг для проверки существования созданного пакета 
         run: |
           if [ -f "./build/IFilterProject-0.1.0-Linux.sh" ]; then  # Убедитесь, что имя файла правильное
             echo "Linux package exists."
@@ -105,5 +108,4 @@ jobs:
         run: |
           echo "Current directory:"
           pwd
-          echo "List of files in build directory:"
-          ls -la ./build
+          echo

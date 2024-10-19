@@ -17,6 +17,8 @@
 //The directory containing a CMake configuration file for Boost.
 Boost_DIR:PATH=C:/msys64/mingw64/lib/cmake/Boost-1.86.0
 
+Boost_FILESYSTEM_LIBRARY_RELEASE:STRING=C:/msys64/mingw64/bin/libboost_filesystem-mt.dll
+
 //Path to a file.
 Boost_INCLUDE_DIR:PATH=C:/msys64/mingw64/include
 
@@ -306,14 +308,23 @@ IPFilterProject_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 IPFilterProject_SOURCE_DIR:STATIC=C:/lAbA/lab_02
 
+//The directory containing a CMake configuration file for OpenMPI.
+OpenMPI_DIR:PATH=OpenMPI_DIR-NOTFOUND
+
 //The directory containing a CMake configuration file for boost_algorithm.
 boost_algorithm_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_algorithm-1.86.0
+
+//The directory containing a CMake configuration file for boost_align.
+boost_align_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_align-1.86.0
 
 //The directory containing a CMake configuration file for boost_array.
 boost_array_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_array-1.86.0
 
 //The directory containing a CMake configuration file for boost_assert.
 boost_assert_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_assert-1.86.0
+
+//The directory containing a CMake configuration file for boost_atomic.
+boost_atomic_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_atomic-1.86.0-shared
 
 //The directory containing a CMake configuration file for boost_bind.
 boost_bind_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_bind-1.86.0
@@ -341,6 +352,9 @@ boost_detail_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_detail-1.86.0
 
 //The directory containing a CMake configuration file for boost_exception.
 boost_exception_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_exception-1.86.0
+
+//The directory containing a CMake configuration file for boost_filesystem.
+boost_filesystem_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_filesystem-1.86.0-shared
 
 //The directory containing a CMake configuration file for boost_function.
 boost_function_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_function-1.86.0
@@ -390,11 +404,17 @@ boost_range_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_range-1.86.0
 //The directory containing a CMake configuration file for boost_regex.
 boost_regex_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_regex-1.86.0
 
+//The directory containing a CMake configuration file for boost_scope.
+boost_scope_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_scope-1.86.0
+
 //The directory containing a CMake configuration file for boost_smart_ptr.
 boost_smart_ptr_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_smart_ptr-1.86.0
 
 //The directory containing a CMake configuration file for boost_static_assert.
 boost_static_assert_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_static_assert-1.86.0
+
+//The directory containing a CMake configuration file for boost_system.
+boost_system_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_system-1.86.0
 
 //The directory containing a CMake configuration file for boost_throw_exception.
 boost_throw_exception_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_throw_exception-1.86.0
@@ -416,6 +436,12 @@ boost_unordered_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_unordered-1.86.0
 
 //The directory containing a CMake configuration file for boost_utility.
 boost_utility_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_utility-1.86.0
+
+//The directory containing a CMake configuration file for boost_variant2.
+boost_variant2_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_variant2-1.86.0
+
+//The directory containing a CMake configuration file for boost_winapi.
+boost_winapi_DIR:PATH=C:/msys64/mingw64/lib/cmake/boost_winapi-1.86.0
 
 //Value Computed by CMake
 ip_filter_BINARY_DIR:STATIC=C:/lAbA/lab_02/build
@@ -511,6 +537,8 @@ CMAKE_GENERATOR_INSTANCE:INTERNAL=
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Test CMAKE_HAVE_LIBC_PTHREAD
+CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=C:/lAbA/lab_02
@@ -606,7 +634,7 @@ CPACK_SOURCE_7Z-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CPACK_SOURCE_ZIP
 CPACK_SOURCE_ZIP-ADVANCED:INTERNAL=1
 //Details about finding Boost
-FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[C:/msys64/mingw64/lib/cmake/Boost-1.86.0/BoostConfig.cmake][cfound components: unit_test_framework ][v1.86.0()]
+FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[C:/msys64/mingw64/lib/cmake/Boost-1.86.0/BoostConfig.cmake][cfound components: filesystem system ][v1.86.0()]
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 
