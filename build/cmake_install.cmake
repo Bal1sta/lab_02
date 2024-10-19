@@ -60,7 +60,10 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/resources" TYPE FILE FILES "C:/lAbA/lab_02/resources/ic.icns")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/resources" TYPE FILE FILES
+    "C:/lAbA/lab_02/resources/ic.icns"
+    "C:/lAbA/lab_02/ip_filter.tsv"
+    )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

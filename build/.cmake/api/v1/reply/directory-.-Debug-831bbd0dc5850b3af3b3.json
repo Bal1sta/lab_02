@@ -88,7 +88,8 @@
 			"destination" : "resources",
 			"paths" : 
 			[
-				"resources/ic.icns"
+				"resources/ic.icns",
+				"ip_filter.tsv"
 			],
 			"type" : "file"
 		}
